@@ -8,7 +8,21 @@ import { Container } from "./styles";
 
 export function Summary(){
     const {transactions} = useContext(TransactionsContext);
-    console.log(transactions);
+    const totalDeposits = transactions.reduce((acc, transaction) => {
+        if (transaction.type === 'deposit') {
+            acc.deposit += transaction.amount;
+            acc.total += transaction.amount;
+        }
+        else{
+            acc.withdraw += transaction.amount;
+            acc.total -= transaction.amount;
+        }
+        return acc;
+    },{
+        deposit: 0,
+        withdraw: 0,
+        total:0,
+    });
     
     return (
         <Container>
@@ -17,21 +31,36 @@ export function Summary(){
                     <p>Entradas</p>
                     <img src={incomeImg} alt="Entradas"/>
                 </header>
-                <strong>R$1234.43</strong>
+                <strong>
+                    {new Intl.NumberFormat('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL'
+                    }).format(totalDeposits.deposit)}
+                </strong>
             </div>
             <div>
                 <header>
                     <p>Saídas</p>
                     <img src={outcomeImg} alt="Saídas"/>
                 </header>
-                <strong>R$1234.43</strong>
+                <strong>
+                    {new Intl.NumberFormat('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL'
+                    }).format(totalDeposits.withdraw)}
+                </strong>
             </div>
             <div className='green-background'>
                 <header>
                     <p>Total</p>
                     <img src={totalImg} alt="Total"/>
                 </header>
-                <strong>R$1200.43</strong>
+                <strong>
+                    {new Intl.NumberFormat('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL'
+                    }).format(totalDeposits.total)}
+                </strong>
             </div>
  
         </Container>    
